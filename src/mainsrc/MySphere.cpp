@@ -112,6 +112,10 @@ void MySphere::GenerateMesh(STTriangleMesh  *tmesh, std::vector<TriangleIndices>
     //
     //
     //-----------------------------------------------------------
+
+
+
+
 }
 
 
@@ -148,6 +152,8 @@ void MySphere::SubDivideTriangles(int level, std::vector<TriangleIndices> *faces
 //-------------------------------------------------------
 void MySphere::InitFaces(void)
 {
+
+
 
 }
 
@@ -220,7 +226,7 @@ void MySphere::Create(int levels)
     //      2. call GenerateMesh to create the traingle mesh for your sphere
     //-----------------------------------------------------------------
     //
-    //
+    GenerateMesh(new STTriangleMesh(), m_faces, m_vertices, m_vertices.size());
     //-----------------------------------------------------------------
 
     // save the file
@@ -267,5 +273,11 @@ STTriangleMesh * MySphere::GetTriangleMesh(int id)
 //----------------------------------------------------------------
 void MySphere::ClearMesh(void)
 {
+    m_vertices.clear();
+    m_faces.clear();
+
+    for(unsigned int i = 0; i < m_TriangleMeshes.size(); i++){
+        delete m_TriangleMeshes[i];
+    }
 
 }
