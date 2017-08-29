@@ -134,17 +134,32 @@ void MySphere::SubDivideTriangles(int level, std::vector<TriangleIndices> *faces
 
     for (int i = 0; i < level; i++) {
 
-          int nFaces = facesIn->size();
-          for(int j = 0; j < nFaces; ++j) {
+        int nFaces = facesIn->size();
+        for(int j = 0; j < nFaces; ++j) {
 
-                //---------------------------------------------------------
-                // TO DO:Split triangles into 4 smaller triangles
-                // For each edge of each face, compute the midpoints.
-                // Use the MidPoint function to update the vertices.
-                // Update the faces in each iteration.
-                //---------------------------------------------------------
-          }
-          (*facesIn) = (*facesOut);
+            //---------------------------------------------------------
+            // TO DO:Split triangles into 4 smaller triangles
+            // For each edge of each face, compute the midpoints.
+            // Use the MidPoint function to update the vertices.
+            // Update the faces in each iteration.
+            //---------------------------------------------------------
+            TriangleIndices triangleIndices = nFaces[j];
+            int verticeA = triangleIndices.i1;
+            int verticeB = triangleIndices.i2;
+            int verticeC = triangleIndices.i2;
+
+            int a = MidPoint(verticeA, verticeB, midPointIndices, vertices);
+            int b = MidPoint(verticeB, verticeC, midPointIndices, vertices);
+            int c = MidPoint(verticeC, verticeA, midPointIndices, vertices);
+
+            facesOut.push_back(MakeTIndices(verticeA, a, c));
+            facesOut.push_back(MakeTIndices(verticeB, b, a));
+            facesOut.push_back(MakeTIndices(verticeC, c, b));
+            facesOut.push_back(MakeTIndices(a, b, c));
+
+
+        }
+        (*facesIn) = (*facesOut);
     }
 }
 
@@ -244,7 +259,10 @@ void MySphere::Create(int levels)
     //----------------------------------------------------------------
     //
     //-----------------------------------------------------------------
-
+    std::vector<TriangleIndices> facesOut;
+    facesOut.reserve(m_faces.size() * 4);
+    m_levels = levels;
+    SubDivideTriangles(m_levels, m_faces, facesOut, m_vertices);
 
     //-----------------------------------------------------------------
     // TO DO: Once faces are generated:
