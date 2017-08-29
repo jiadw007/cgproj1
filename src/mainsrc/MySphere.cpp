@@ -112,9 +112,14 @@ void MySphere::GenerateMesh(STTriangleMesh  *tmesh, std::vector<TriangleIndices>
     //
     //
     //-----------------------------------------------------------
+    for(unsigned int i=0; i < vertices.size(); i++){
+        tmesh->AddVertex(vertices[i].x, vertices[i].y, vertices[i].z);
+    }
+    for(unsigned int i=0; i < face.size();i++){
+        tmesh->AddFace(face[i].i1, face[i].i2, face[i].i3);
+    }
 
-
-
+    m_TriangleMeshes.push_back(tmesh);
 
 }
 
@@ -153,8 +158,29 @@ void MySphere::SubDivideTriangles(int level, std::vector<TriangleIndices> *faces
 void MySphere::InitFaces(void)
 {
 
+    m_faces.push_back(MakeTIndices(0, 11, 5));
+    m_faces.push_back(MakeTIndices(0, 5, 1));
+    m_faces.push_back(MakeTIndices(0, 1, 7));
+    m_faces.push_back(MakeTIndices(0, 7, 10));
+    m_faces.push_back(MakeTIndices(0, 10, 11));
 
+    m_faces.push_back(MakeTIndices(1, 5, 9));
+    m_faces.push_back(MakeTIndices(5, 11, 4));
+    m_faces.push_back(MakeTIndices(11, 10, 2));
+    m_faces.push_back(MakeTIndices(10, 7, 6));
+    m_faces.push_back(MakeTIndices(7, 1, 8));
 
+    m_faces.push_back(MakeTIndices(3, 9,4));
+    m_faces.push_back(MakeTIndices(3, 4, 2));
+    m_faces.push_back(MakeTIndices(3, 2, 6));
+    m_faces.push_back(MakeTIndices(3, 6, 8));
+    m_faces.push_back(MakeTIndices(3, 8, 9));
+
+    m_faces.push_back(MakeTIndices(4, 9 ,5));
+    m_faces.push_back(MakeTIndices(2, 4, 11));
+    m_faces.push_back(MakeTIndices(6, 2, 10));
+    m_faces.push_back(MakeTIndices(6, 7 , 8));
+    m_faces.push_back(MakeTIndices(8, 1,9));
 }
 
 
@@ -273,9 +299,7 @@ STTriangleMesh * MySphere::GetTriangleMesh(int id)
 //----------------------------------------------------------------
 void MySphere::ClearMesh(void)
 {
-    m_vertices.clear();
-    m_faces.clear();
-
+    
     for(unsigned int i = 0; i < m_TriangleMeshes.size(); i++){
         delete m_TriangleMeshes[i];
     }
