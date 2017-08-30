@@ -66,6 +66,8 @@ int MySphere::Offset(STVector3 p, std::vector<STVector3>* vertices)
     //-----------------------------------------------
     // 
     //------------------------------------------------
+    float length = math::sqrt(p.x*p.x + p.y*p.y + p.z*p.z);
+    vertices.push_back(STVector3(p.x / length, p.y / length, p.z / length));
 
     return m_globalCount + 1;
 }
@@ -95,6 +97,28 @@ int MySphere::MidPoint(int p1, int p2, std::multimap<long, int> *midPointIndices
         //
         //
         //--------------------------------------------------------------------------
+
+        //check duplicates
+        long smallerIndice = p1 < p2 ? p1 : p2;
+        long largerIndice = p1 > p2 ? p1 : p2;
+        long key = (smallerIndice << 16) + largerIndice;
+
+        auto search = midPointIndices->find(key);
+        if(search != midPointIndices->end()){ //find duplicate
+            
+            index = search->second;
+
+        } else{
+
+            STVector3 point1 = m_vertices[p1];
+            STVector3 point2 = m_vertices[p2];
+            STVector3 midPoint = STVector3((point1.x + point2.x) / 2.0, (point1.y + point2.y) / 2.0, (point1.z + point2.z) / 2.0);
+
+            index = Offset(midPoint, vertices) + vertices.size() - 1;
+
+            midPointIndices->insert(key, index);
+        }
+
 
 
         return(index);
@@ -148,14 +172,14 @@ void MySphere::SubDivideTriangles(int level, std::vector<TriangleIndices> *faces
             int verticeB = triangleIndices.i2;
             int verticeC = triangleIndices.i2;
 
-            int a = MidPoint(verticeA, verticeB, midPointIndices, vertices);
-            int b = MidPoint(verticeB, verticeC, midPointIndices, vertices);
-            int c = MidPoint(verticeC, verticeA, midPointIndices, vertices);
+            int a = MidPoint(verticeA, verticeB, &midPointIndices, vertices);
+            int b = MidPoint(verticeB, verticeC, &midPointIndices, vertices);
+            int c = MidPoint(verticeC, verticeA, &midPointIndices, vertices);
 
-            facesOut.push_back(MakeTIndices(verticeA, a, c));
-            facesOut.push_back(MakeTIndices(verticeB, b, a));
-            facesOut.push_back(MakeTIndices(verticeC, c, b));
-            facesOut.push_back(MakeTIndices(a, b, c));
+            facesOut->push_back(MakeTIndices(verticeA, a, c));
+            facesOut->push_back(MakeTIndices(verticeB, b, a));
+            facesOut->push_back(MakeTIndices(verticeC, c, b));
+            facesOut->push_back(MakeTIndices(a, b, c));
 
 
         }
@@ -172,6 +196,8 @@ void MySphere::SubDivideTriangles(int level, std::vector<TriangleIndices> *faces
 //-------------------------------------------------------
 void MySphere::InitFaces(void)
 {
+
+    m_faces.clear();
 
     m_faces.push_back(MakeTIndices(0, 11, 5));
     m_faces.push_back(MakeTIndices(0, 5, 1));
@@ -259,10 +285,10 @@ void MySphere::Create(int levels)
     //----------------------------------------------------------------
     //
     //-----------------------------------------------------------------
-    std::vector<TriangleIndices> facesOut;
-    facesOut.reserve(m_faces.size() * 4);
+    std::vector<TriangleIndices> *facesOut;
+    facesOut->reserve(m_faces.size() * 4);
     m_levels = levels;
-    SubDivideTriangles(m_levels, m_faces, facesOut, m_vertices);
+    SubDivideTriangles(m_levels, &m_faces, facesOut, &m_vertices);
 
     //-----------------------------------------------------------------
     // TO DO: Once faces are generated:
