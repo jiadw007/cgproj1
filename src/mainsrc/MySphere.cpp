@@ -8,7 +8,6 @@
 
 
 #include "MySphere.h"
-#include <math.h>
 //-----------------------------------------------
 // ConStructor
 //-----------------------------------------------
@@ -65,9 +64,11 @@ int MySphere::Offset(STVector3 p, std::vector<STVector3>* vertices)
     //-----------------------------------------------
     // 
     //------------------------------------------------
-    float length = sqrt(p.x*p.x + p.y*p.y + p.z*p.z);
-    vertices->push_back(STVector3(p.x / length, p.y / length, p.z / length));
-    
+	float pos = (1.0 + sqrtf(5.0)) / 2.0;
+	float radius = sqrtf(1 + pos * pos);
+    float length = sqrtf(p.x*p.x + p.y*p.y + p.z*p.z);
+    vertices->push_back(STVector3(p.x * radius / length, p.y * radius / length, p.z  * radius/ length));
+	
     return m_globalCount++;
 }
 
@@ -193,6 +194,7 @@ void MySphere::InitFaces(void)
 
     //m_faces.clear();
 
+
     m_faces.push_back(MakeTIndices(0, 11, 5));
     m_faces.push_back(MakeTIndices(0, 5, 1));
     m_faces.push_back(MakeTIndices(0, 1, 7));
@@ -280,8 +282,8 @@ void MySphere::Create(int levels)
     //
     //-----------------------------------------------------------------
     std::vector<TriangleIndices> facesOut;
-    m_globalCount = m_vertices.size();
-    m_levels = 1;
+	m_globalCount = m_vertices.size();
+    m_levels = levels;
     SubDivideTriangles(m_levels, &m_faces, &facesOut, &m_vertices);
 
     //-----------------------------------------------------------------

@@ -5,6 +5,7 @@
 #include "stForward.h"
 
 #include <math.h>
+#include <algorithm>
 
 /**
 * STVector3 represents a 3-vector
