@@ -556,6 +556,7 @@ void KeyCallback(unsigned char key, int x, int y)
                 gMassCenter=STTriangleMesh::GetMassCenter(gTriangleMeshes);
                 gBoundingBox=STTriangleMesh::GetBoundingBox(gTriangleMeshes);
            }
+			meshType = MeshType::Mesh;
             break;
         }
 
