@@ -66,9 +66,8 @@ int MySphere::Offset(STVector3 p, std::vector<STVector3>* vertices)
     //------------------------------------------------
 	float pos = (1.0 + sqrtf(5.0)) / 2.0;
 	float radius = sqrtf(1 + pos * pos);
-    float length = sqrtf(p.x*p.x + p.y*p.y + p.z*p.z);
-    vertices->push_back(STVector3(p.x * radius / length, p.y * radius / length, p.z  * radius/ length));
-	
+	p.Normalize();
+    vertices->push_back(STVector3(p.x * radius , p.y * radius , p.z  * radius));
     return m_globalCount++;
 }
 
