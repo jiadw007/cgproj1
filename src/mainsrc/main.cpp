@@ -35,10 +35,10 @@ std::string displacementMap;
 std::string meshOBJ;
 
 // Light source attributes
-static float ambientLight[]  = {0.50, 0.50, 0.50, 1.0};
+static float ambientLight[]  = {0.9, 0.9, 0.9, 1.0};
 static float diffuseLight[]  = {1.00, 1.00, 1.00, 1.0};
-static float specularLight[] = {1.00, 1.00, 1.00, 1.0};
-float lightPosition[] = {10.0f, 15.0f, 10.0f, 1.0f};
+static float specularLight[] = {0.2, 0.2, 0.2, 1.0};
+float lightPosition[] = {-10.0f, -15.0f, 0.0f, 1.0f};
 
 
 // textures
